@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(fzlvm)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
@@ -13,13 +13,25 @@ FetchContent_MakeAvailable(googletest)
 
 include_directories(include)
 
-set(FZLVM_SRCS
+set(FZLVM_HEADERS
 "include/fzlvm/vm.h"
+"include/fzlvm/instruction.h"
+"include/fzlvm/handlers/alu.h"
+"include/fzlvm/handlers/mem.h"
+"include/fzlvm/handlers/handlers.h"
 )
+
+set(FZLVM_SRCS
+${FZLVM_HEADERS}
+"src/vm.cc"
+"src/handlers/alu.cc"
+)
+
 
 set(FZLVM_Tests
 ${FZLVM_SRCS}
-tests/vm_test.cc
+"tests/vm_test.cc"
+"tests/isa_test.cc"
 )
 
 enable_testing()
