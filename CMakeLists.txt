@@ -24,6 +24,7 @@ set(FZLVM_HEADERS
 set(FZLVM_SRCS
 ${FZLVM_HEADERS}
 "src/vm.cc"
+"src/instruction.cpp"
 "src/handlers/alu.cc"
 )
 

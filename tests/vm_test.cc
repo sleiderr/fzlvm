@@ -1,4 +1,3 @@
-#include "fzlvm/instruction.h"
 #include "fzlvm/vm.h"
 
 #include <cstddef>
@@ -14,7 +13,7 @@ TEST(VM, EmptyRegistersInitially) {
 TEST(VM, ExecLoopTerminating) {
     fzlvm::VM testVM{};
     std::vector<std::byte> testROM({std::byte(1), std::byte(3), std::byte(0)});
-    testVM.LoadRom(testROM);
+    testVM.LoadRom(std::move(testROM));
 
     testVM.Exec();
 }

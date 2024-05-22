@@ -4,6 +4,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <span>
+#include <stdexcept>
 #include <vector>
 
 #include "fzlvm/handlers/handlers.h"
@@ -23,10 +25,14 @@ void fzlvm::VM::LoadRom(const std::filesystem::path &rom_path) {
 
     rom_file.read(reinterpret_cast<char *>(rom_.data()), rom_size);
 
+    rom_span_ = std::span<std::byte>(rom_);
     rom_file.close();
 }
 
-void fzlvm::VM::LoadRom(const std::vector<std::byte> &rom) { rom_ = rom; }
+void fzlvm::VM::LoadRom(const std::vector<std::byte> &&rom) {
+    rom_ = std::move(rom);
+    rom_span_ = std::span<std::byte>(rom_);
+}
 
 void fzlvm::VM::Step() {
     if (pc_ >= rom_.size()) {
@@ -34,12 +40,16 @@ void fzlvm::VM::Step() {
         return;
     }
 
-    fzlvm::instruction::Opcode next_opcode =
-        static_cast<fzlvm::instruction::Opcode>(NextByte());
-
-    auto curr_instruction = fzlvm::instruction::Instruction(next_opcode);
-    handlers::kInstructionHandlers.at(curr_instruction.GetInstructionCode())(
-        curr_instruction, *this);
+    auto curr_bytecode = NextBytecode();
+    auto curr_instruction = fzlvm::instruction::Instruction(curr_bytecode);
+    try {
+        auto handler = handlers::kInstructionHandlers.at(
+            curr_instruction.GetInstructionCode());
+        handler(curr_instruction, *this);
+    } catch (const std::out_of_range &e) {
+        std::cerr << "Received invalid instruction. Aborting...\n";
+        pc_ = rom_.size();
+    }
 }
 
 void fzlvm::VM::Exec() {
@@ -47,3 +57,5 @@ void fzlvm::VM::Exec() {
         Step();
     }
 }
+// 0 00011 1 0
+// 1 00110 0 0

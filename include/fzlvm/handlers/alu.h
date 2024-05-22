@@ -6,6 +6,8 @@
 
 namespace fzlvm::handlers::alu {
 void AddHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
-}
+void SubHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+void NotHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+} // namespace fzlvm::handlers::alu
 
 #endif

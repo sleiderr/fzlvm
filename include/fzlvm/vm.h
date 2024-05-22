@@ -4,6 +4,7 @@
 #include <array>
 #include <cstddef>
 #include <filesystem>
+#include <span>
 #include <vector>
 
 namespace fzlvm {
@@ -17,9 +18,15 @@ class VM {
     const unsigned int &GetRegister(size_t id) const { return registers_[id]; }
 
     void LoadRom(const std::filesystem::path &rom_path);
-    void LoadRom(const std::vector<std::byte> &rom);
+    void LoadRom(const std::vector<std::byte> &&rom);
 
     std::byte NextByte() { return rom_[pc_++]; };
+    std::span<std::byte, 4> NextBytecode() {
+        auto dynamic_span = rom_span_.subspan(pc_, 4);
+
+        pc_ += 4;
+        return std::span<std::byte, 4>(dynamic_span.data(), 4);
+    };
 
     void Step();
     void Exec();
@@ -27,6 +34,7 @@ class VM {
   private:
     std::array<unsigned int, 32> registers_;
     std::vector<std::byte> rom_;
+    std::span<std::byte> rom_span_;
     size_t pc_;
 };
 
