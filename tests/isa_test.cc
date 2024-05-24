@@ -67,3 +67,156 @@ TEST(ISA, SubInstructionImm) {
 
     EXPECT_EQ(testVM.GetRegister(0), 64);
 }
+
+TEST(ISA, NotInstruction) {
+    auto notInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kNot,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(notInstr);
+
+    testVM.GetRegister(0) = 0xFFFF0000;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0xFFFF);
+}
+
+TEST(ISA, AndInstruction) {
+    auto andInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kAnd,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(andInstr);
+
+    testVM.GetRegister(0) = 0x7;
+    testVM.GetRegister(1) = 0x13;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x3);
+}
+
+TEST(ISA, AndInstructionImm) {
+    auto andInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kAnd,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0x13), std::byte(0)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(andInstr);
+
+    testVM.GetRegister(0) = 0x7;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x3);
+}
+
+TEST(ISA, OrInstruction) {
+    auto orInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kOr,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(orInstr);
+
+    testVM.GetRegister(0) = 0x7;
+    testVM.GetRegister(1) = 0x13;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x17);
+}
+
+TEST(ISA, OrInstructionImm) {
+    auto orInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kOr,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0x13), std::byte(0)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(orInstr);
+
+    testVM.GetRegister(0) = 0x7;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x17);
+}
+
+TEST(ISA, XorInstruction) {
+    auto xorInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kXor,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(xorInstr);
+
+    testVM.GetRegister(0) = 0x7;
+    testVM.GetRegister(1) = 0x13;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x14);
+}
+
+TEST(ISA, XorInstructionImm) {
+    auto xorInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kXor,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0x13), std::byte(0)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(xorInstr);
+
+    testVM.GetRegister(0) = 0x7;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x14);
+}
+
+TEST(ISA, ShlInstruction) {
+    auto shlInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kShl,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(shlInstr);
+
+    testVM.GetRegister(0) = 0x1;
+    testVM.GetRegister(1) = 0x8;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x100);
+}
+
+TEST(ISA, ShlInstructionImm) {
+    auto shlInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kShl,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0x8), std::byte(0)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(shlInstr);
+
+    testVM.GetRegister(0) = 0x1;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x100);
+}
+
+TEST(ISA, ShrInstruction) {
+    auto shrInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kShr,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(shrInstr);
+
+    testVM.GetRegister(0) = 0x100;
+    testVM.GetRegister(1) = 0x8;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x1);
+}
+
+TEST(ISA, ShrInstructionImm) {
+    auto shrInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kShr,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0x8), std::byte(0)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(shrInstr);
+
+    testVM.GetRegister(0) = 0x100;
+    testVM.Step();
+
+    EXPECT_EQ(testVM.GetRegister(0), 0x1);
+}

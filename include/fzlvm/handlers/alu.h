@@ -8,6 +8,11 @@ namespace fzlvm::handlers::alu {
 void AddHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
 void SubHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
 void NotHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+void AndHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+void OrHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+void XorHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+void ShlHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
+void ShrHandler(fzlvm::instruction::Instruction, fzlvm::VM &);
 } // namespace fzlvm::handlers::alu
 
 #endif
