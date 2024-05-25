@@ -7,6 +7,8 @@
 #include <span>
 #include <vector>
 
+#include "fzlvm/registers/sysflags.h"
+
 namespace fzlvm {
 
 class VM {
@@ -19,6 +21,8 @@ class VM {
 
     void LoadRom(const std::filesystem::path &rom_path);
     void LoadRom(const std::vector<std::byte> &&rom);
+
+    registers::SystemFlags &SysFlags() { return sys_flags_; }
 
     std::byte NextByte() { return rom_[pc_++]; };
     std::span<std::byte, 4> NextBytecode() {
@@ -33,6 +37,7 @@ class VM {
 
   private:
     std::array<unsigned int, 32> registers_;
+    registers::SystemFlags sys_flags_;
     std::vector<std::byte> rom_;
     std::span<std::byte> rom_span_;
     size_t pc_;

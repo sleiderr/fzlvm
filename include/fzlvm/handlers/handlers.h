@@ -26,6 +26,7 @@ static const std::unordered_map<fzlvm::instruction::InstructionCode,
             {instruction::InstructionCode::kXor, *alu ::XorHandler},
             {instruction::InstructionCode::kShl, *alu ::ShlHandler},
             {instruction::InstructionCode::kShr, *alu ::ShrHandler},
+            {instruction::InstructionCode::kCmp, *alu ::CmpHandler},
         };
 } // namespace fzlvm::handlers
 #endif

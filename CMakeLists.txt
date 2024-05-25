@@ -16,6 +16,7 @@ include_directories(include)
 set(FZLVM_HEADERS
 "include/fzlvm/vm.h"
 "include/fzlvm/instruction.h"
+"include/fzlvm/registers/sysflags.h"
 "include/fzlvm/handlers/alu.h"
 "include/fzlvm/handlers/mem.h"
 "include/fzlvm/handlers/handlers.h"
@@ -24,7 +25,7 @@ set(FZLVM_HEADERS
 set(FZLVM_SRCS
 ${FZLVM_HEADERS}
 "src/vm.cc"
-"src/instruction.cpp"
+"src/instruction.cc"
 "src/handlers/alu.cc"
 )
 

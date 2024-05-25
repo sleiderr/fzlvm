@@ -27,6 +27,20 @@ TEST(ISA, AddInstruction) {
     EXPECT_EQ(testVM.GetRegister(0), 3072);
 }
 
+TEST(ISA, AddInstructionOverflow) {
+    auto addInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kAdd,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(addInstr);
+
+    testVM.GetRegister(0) = 0xFFFFFFF0;
+    testVM.GetRegister(1) = 0xF0;
+
+    testVM.Step();
+    EXPECT_TRUE(testVM.SysFlags().OverflowFlag());
+}
+
 TEST(ISA, AddInstructionImm) {
     auto addInstr = fzlvm::instruction::Instruction::BuildInstruction(
         fzlvm::instruction::InstructionCode::kAdd,
@@ -219,4 +233,64 @@ TEST(ISA, ShrInstructionImm) {
     testVM.Step();
 
     EXPECT_EQ(testVM.GetRegister(0), 0x1);
+}
+
+TEST(ISA, CmpInstructionEq) {
+    auto cmpInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kCmp,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(cmpInstr);
+
+    testVM.GetRegister(0) = 0x100;
+    testVM.GetRegister(1) = 0x100;
+    testVM.Step();
+
+    EXPECT_TRUE(testVM.SysFlags().ZeroFlag());
+}
+
+TEST(ISA, CmpInstructionNeqLeq) {
+    auto cmpInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kCmp,
+        std::array<std::byte, 3>({std::byte(0), std::byte(1), std::byte(0)}));
+
+    auto testVM = SingleInstructionVMBuilder(cmpInstr);
+
+    testVM.GetRegister(0) = 0x0;
+    testVM.GetRegister(1) = 0x100;
+    testVM.Step();
+
+    EXPECT_FALSE(testVM.SysFlags().ZeroFlag());
+    EXPECT_TRUE(testVM.SysFlags().NegativeFlag());
+    EXPECT_TRUE(testVM.SysFlags().OverflowFlag());
+}
+
+TEST(ISA, CmpInstructionEqImm) {
+    auto cmpInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kCmp,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0), std::byte(0x1)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(cmpInstr);
+
+    testVM.GetRegister(0) = 0x100;
+    testVM.Step();
+
+    EXPECT_TRUE(testVM.SysFlags().ZeroFlag());
+}
+
+TEST(ISA, CmpInstructionNeqGeqImm) {
+    auto cmpInstr = fzlvm::instruction::Instruction::BuildInstruction(
+        fzlvm::instruction::InstructionCode::kCmp,
+        std::array<std::byte, 3>({std::byte(0), std::byte(0x10), std::byte(0)}),
+        true);
+
+    auto testVM = SingleInstructionVMBuilder(cmpInstr);
+
+    testVM.GetRegister(0) = 0x100;
+    testVM.Step();
+
+    EXPECT_FALSE(testVM.SysFlags().ZeroFlag());
+    EXPECT_FALSE(testVM.SysFlags().NegativeFlag());
+    EXPECT_FALSE(testVM.SysFlags().OverflowFlag());
 }
