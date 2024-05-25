@@ -7,6 +7,7 @@
 
 namespace fzlvm::instruction {
 enum class InstructionCode : std::uint8_t {
+    kNop,
     kAdd,
     kOr,
     kShr,
@@ -17,7 +18,8 @@ enum class InstructionCode : std::uint8_t {
     kMov,
     kNot,
     kCmp,
-    kHlt
+    kHlt,
+    kJmp
 };
 
 class Instruction {

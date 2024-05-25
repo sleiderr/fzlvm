@@ -19,6 +19,7 @@ set(FZLVM_HEADERS
 "include/fzlvm/registers/sysflags.h"
 "include/fzlvm/handlers/alu.h"
 "include/fzlvm/handlers/mem.h"
+"include/fzlvm/handlers/jmp.h"
 "include/fzlvm/handlers/handlers.h"
 )
 
@@ -27,6 +28,7 @@ ${FZLVM_HEADERS}
 "src/vm.cc"
 "src/instruction.cc"
 "src/handlers/alu.cc"
+"src/handlers/jmp.cc"
 )
 
 
@@ -34,6 +36,7 @@ set(FZLVM_Tests
 ${FZLVM_SRCS}
 "tests/vm_test.cc"
 "tests/isa_test.cc"
+"tests/jmp_test.cc"
 )
 
 enable_testing()

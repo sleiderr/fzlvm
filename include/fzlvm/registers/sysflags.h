@@ -7,7 +7,7 @@ namespace fzlvm::registers {
 class SystemFlags {
 
   public:
-    SystemFlags() : flags_{} {}
+    SystemFlags() : flags_{} { flags_.zero_flag = 1; }
 
     void ClearFlags() { flags_ = std::bit_cast<Flags>(0); };
 
@@ -15,6 +15,7 @@ class SystemFlags {
     void ClearZeroFlag() { flags_.zero_flag = 0; };
     bool ZeroFlag() const { return flags_.zero_flag != 0; }
     void SetCarryFlag() { flags_.carry_flag = 1; };
+    bool CarryFlag() const { return flags_.carry_flag != 0; }
     void ClearCarryFlag() { flags_.carry_flag = 0; };
     void SetOverflowFlag() { flags_.overflow_flag = 1; };
     bool OverflowFlag() const { return flags_.overflow_flag != 0; }

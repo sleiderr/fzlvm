@@ -13,7 +13,7 @@ namespace fzlvm {
 
 class VM {
   public:
-    VM() : registers_{}, rom_{}, pc_{} {};
+    VM() : registers_{}, rom_{}, pc_{}, sys_flags_{} {};
 
     unsigned int &GetRegister(size_t id) { return registers_[id]; }
 
@@ -21,6 +21,9 @@ class VM {
 
     void LoadRom(const std::filesystem::path &rom_path);
     void LoadRom(const std::vector<std::byte> &&rom);
+
+    size_t &GetProgramCounter() { return pc_; }
+    const size_t MaxRomAddress() const { return rom_.size(); }
 
     registers::SystemFlags &SysFlags() { return sys_flags_; }
 
