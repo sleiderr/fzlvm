@@ -31,12 +31,21 @@ ${FZLVM_HEADERS}
 "src/handlers/jmp.cc"
 )
 
+set(FZLVM_REPL_SRCS
+${FZLVM_SRCS}
+"src/repl/main.cc"
+)
 
 set(FZLVM_Tests
 ${FZLVM_SRCS}
 "tests/vm_test.cc"
 "tests/isa_test.cc"
 "tests/jmp_test.cc"
+)
+
+add_executable(
+    fzlvm
+    ${FZLVM_REPL_SRCS}
 )
 
 enable_testing()
