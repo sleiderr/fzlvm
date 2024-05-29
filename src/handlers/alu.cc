@@ -1,7 +1,6 @@
 #include "fzlvm/handlers/alu.h"
 
 #include <cstdint>
-#include <iostream>
 
 #include "fzlvm/instruction.h"
 #include "fzlvm/registers/sysflags.h"

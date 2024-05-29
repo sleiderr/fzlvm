@@ -16,6 +16,8 @@ class FzlRepl {
     FzlRepl() : vm_{}, history_{} {};
     void RunMainLoop();
 
+    fzlvm::VM &VM() { return vm_; }
+
     static void RegisterMetaCommand(
         std::string,
         std::shared_ptr<int (*)(std::vector<std::string> args, FzlRepl &)>);
@@ -31,5 +33,11 @@ class FzlRepl {
 
 using FzlMetaCommandHandler = int (*)(std::vector<std::string>, FzlRepl &);
 } // namespace fzlvm::repl
+
+namespace fzlvm::repl::commands {
+int PrintRegister(std::vector<std::string>, ::fzlvm::repl::FzlRepl &);
+int DebugSysFlags(std::vector<std::string>, ::fzlvm::repl::FzlRepl &);
+int RawExec(std::vector<std::string>, ::fzlvm::repl::FzlRepl &);
+} // namespace fzlvm::repl::commands
 
 #endif

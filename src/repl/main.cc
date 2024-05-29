@@ -63,10 +63,13 @@ void fzlvm::repl::FzlRepl::RunMainLoop() {
 }
 
 void fzlvm::repl::RegisterBaseMetaCommandHandlers() {
-    auto test_closure = std::make_shared<fzlvm::repl::FzlMetaCommandHandler>(
-        [](std::vector<std::string>, fzlvm::repl::FzlRepl &) {
-            std::cout << "Hello world\n";
-            return 1;
-        });
-    fzlvm::repl::FzlRepl::RegisterMetaCommand("test", test_closure);
+    fzlvm::repl::FzlRepl::RegisterMetaCommand(
+        "register", make_shared<fzlvm::repl::FzlMetaCommandHandler>(
+                        commands::PrintRegister));
+    fzlvm::repl::FzlRepl::RegisterMetaCommand(
+        "sysflags", make_shared<fzlvm::repl::FzlMetaCommandHandler>(
+                        commands::DebugSysFlags));
+    fzlvm::repl::FzlRepl::RegisterMetaCommand(
+        "rexec",
+        make_shared<fzlvm::repl::FzlMetaCommandHandler>(commands::RawExec));
 }

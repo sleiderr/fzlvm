@@ -52,6 +52,16 @@ void fzlvm::VM::Step() {
     }
 }
 
+void fzlvm::VM::SingleInstruction(fzlvm::instruction::Instruction instruction) {
+    try {
+        auto handler =
+            handlers::kInstructionHandlers.at(instruction.GetInstructionCode());
+        handler(instruction, *this);
+    } catch (const std::out_of_range &e) {
+        std::cerr << "Received invalid instruction. Aborting...\n";
+    }
+}
+
 void fzlvm::VM::Exec() {
     while (pc_ < rom_.size()) {
         Step();

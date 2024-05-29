@@ -34,6 +34,7 @@ ${FZLVM_HEADERS}
 set(FZLVM_REPL_SRCS
 ${FZLVM_SRCS}
 "src/repl/main.cc"
+"src/repl/utils.cc"
 )
 
 set(FZLVM_Tests
